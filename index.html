@@ -1,0 +1,1055 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="theme-color" content="#7c3aed">
+<meta name="format-detection" content="telephone=no">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Princess Learning Palace 👸✨</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@400;700;800&display=swap" rel="stylesheet">
+<style>
+/* Fire tablet / offline font fallback */
+body { font-family: 'Nunito', 'Trebuchet MS', Arial, sans-serif; }
+.hdr-logo, .gtitle, .game-card .lbl, .nav-btn, .big-btn, .back-btn,
+[style*="Fredoka"], [class*="fredoka"] { font-family: 'Fredoka One', 'Trebuchet MS', Arial, cursive; }
+</style>
+<style>
+/* ── ROOT ── */
+:root{
+  --pink:#e91e8c; --pink2:#f472b6; --pink3:#fce7f3;
+  --purple:#7c3aed; --purple2:#a78bfa; --purple3:#ede9fe;
+  --gold:#d97706; --gold2:#fef3c7;
+  --green:#059669; --red:#dc2626; --blue:#2563eb;
+  --text:#3b0764; --text2:#6b21a8; --textsoft:#9333ea;
+  --bg:#fdf4ff; --white:#fff; --border:#e9d5ff;
+  --shadow:0 3px 16px rgba(124,58,237,.12);
+  --shadow-lg:0 8px 36px rgba(124,58,237,.22);
+  --radius:18px; --radius-sm:12px;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+/* Prevent double-tap zoom on interactive elements (Fire tablet) */
+button, .game-card, .choice-card, .math-choice, .letter-choice,
+.ttt-cell, .mem-card, .ooo-cell, .pattern-choice, .hay-item,
+.mix-choice, .nav-btn, .back-btn, .big-btn, .color-swatch {
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+  -webkit-user-select: none;
+  user-select: none;
+}
+/* Smooth scrolling and momentum on Fire tablet */
+.main { -webkit-overflow-scrolling: touch; overflow-y: auto; }
+html,body{height:100%;font-family:'Nunito',sans-serif;background:var(--bg);color:var(--text);overflow-x:hidden;}
+
+/* ── ANIMATIONS ── */
+@keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-10px)}}
+@keyframes pop{0%{transform:scale(0);opacity:0}60%{transform:scale(1.15)}100%{transform:scale(1);opacity:1}}
+@keyframes wiggle{0%,100%{transform:rotate(-6deg)}50%{transform:rotate(6deg)}}
+@keyframes bounce{0%,100%{transform:translateY(0)}50%{transform:translateY(-9px)}}
+@keyframes shimmer{0%,100%{opacity:.6}50%{opacity:1}}
+@keyframes slideUp{from{transform:translateY(24px);opacity:0}to{transform:translateY(0);opacity:1}}
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
+@keyframes burst{0%{transform:scale(0) rotate(0);opacity:1}100%{transform:scale(2.8) rotate(200deg);opacity:0}}
+@keyframes glowP{0%,100%{box-shadow:0 0 8px rgba(236,72,153,.35)}50%{box-shadow:0 0 22px rgba(236,72,153,.85)}}
+@keyframes confettiFall{from{transform:translateY(-10px) rotate(0deg);opacity:1}to{transform:translateY(105vh) rotate(720deg);opacity:0}}
+@keyframes sparkle{0%,100%{transform:scale(0);opacity:0}50%{transform:scale(1.3);opacity:1}}
+@keyframes pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.06)}}
+
+/* ── LAYOUT ── */
+.app{display:flex;flex-direction:column;min-height:100vh;}
+
+/* ── HEADER ── */
+.hdr{
+  background:linear-gradient(135deg,#7c3aed 0%,#db2777 100%);
+  color:#fff;padding:10px 20px;
+  display:flex;align-items:center;justify-content:space-between;
+  position:sticky;top:0;z-index:60;
+  box-shadow:0 4px 20px rgba(124,58,237,.35);
+  flex-wrap:wrap;gap:8px;
+}
+.hdr-logo{font-family:'Fredoka One',cursive;font-size:clamp(1.2rem,3vw,1.7rem);display:flex;align-items:center;gap:8px;white-space:nowrap;}
+.hdr-right{display:flex;align-items:center;gap:10px;}
+.score-pill{display:flex;align-items:center;gap:6px;background:rgba(255,255,255,.18);border:2px solid rgba(255,255,255,.45);border-radius:50px;padding:6px 16px;}
+.score-num{font-family:'Fredoka One',cursive;font-size:1.35rem;color:#fde68a;}
+
+/* ── CASTLE BANNER ── */
+.castle-banner{
+  background:linear-gradient(135deg,#fdf4ff,#fce7f3);
+  border-bottom:2px solid var(--border);
+  padding:10px 18px;display:flex;align-items:center;gap:14px;flex-wrap:wrap;
+}
+.castle-mini{cursor:pointer;flex-shrink:0;}
+.castle-info{flex:1;min-width:160px;}
+.castle-lname{font-family:'Fredoka One',cursive;font-size:clamp(.8rem,2vw,1rem);color:var(--purple);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.castle-sub{font-size:.75rem;color:var(--textsoft);margin-top:2px;}
+.castle-track{height:12px;background:#e9d5ff;border-radius:10px;margin-top:5px;overflow:hidden;}
+.castle-fill{height:100%;background:linear-gradient(90deg,var(--purple),var(--pink));border-radius:10px;transition:width .7s cubic-bezier(.34,1.56,.64,1);}
+.castle-badge{font-family:'Fredoka One',cursive;font-size:.82rem;background:var(--purple3);color:var(--purple);padding:5px 13px;border-radius:50px;white-space:nowrap;flex-shrink:0;}
+
+/* ── NAV ── */
+.nav{
+  background:var(--white);border-bottom:2px solid var(--border);
+  display:flex;gap:6px;padding:8px 16px;overflow-x:auto;scrollbar-width:none;
+}
+.nav::-webkit-scrollbar{display:none;}
+.nav-btn{
+  flex-shrink:0;font-family:'Fredoka One',cursive;font-size:clamp(.8rem,2vw,1rem);
+  padding:8px 18px;border-radius:50px;border:2px solid var(--border);
+  cursor:pointer;background:var(--white);color:var(--text2);
+  transition:all .2s;display:flex;align-items:center;gap:6px;
+  white-space:nowrap;
+}
+.nav-btn:hover,.nav-btn.active{background:var(--purple3);border-color:var(--purple);color:var(--purple);transform:scale(1.05);}
+.nav-btn.fun:hover,.nav-btn.fun.active{background:var(--pink3);border-color:var(--pink);color:var(--pink);}
+.nav-btn.castle:hover,.nav-btn.castle.active{background:var(--gold2);border-color:var(--gold);color:var(--gold);}
+
+/* ── MAIN CONTENT ── */
+.main{padding:clamp(12px,3vw,24px);flex:1;}
+.panel{display:none;animation:slideUp .35s ease;}
+.panel.active{display:block;}
+
+/* ── SECTION HEAD ── */
+.sec-head{font-family:'Fredoka One',cursive;font-size:clamp(1.1rem,3vw,1.5rem);color:var(--text);margin-bottom:14px;display:flex;align-items:center;gap:8px;}
+
+/* ── MASCOT BUBBLE ── */
+.mascot-row{display:flex;align-items:flex-start;gap:12px;margin-bottom:14px;}
+.mascot-sm{width:clamp(52px,8vw,72px);height:clamp(52px,8vw,72px);flex-shrink:0;animation:float 3s ease-in-out infinite;}
+.bubble{
+  background:var(--purple3);border:2px solid var(--purple2);
+  border-radius:16px 16px 16px 4px;
+  padding:11px 15px;font-size:clamp(.9rem,2.2vw,1.1rem);font-weight:700;
+  color:var(--purple);line-height:1.4;animation:fadeIn .4s ease;
+}
+.bubble.pink{background:var(--pink3);border-color:var(--pink2);color:var(--pink);}
+
+/* ── GAME GRID ── */
+.game-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(clamp(120px,18vw,160px),1fr));gap:clamp(10px,2vw,16px);margin-bottom:16px;}
+.game-card{
+  background:var(--white);border:2.5px solid var(--border);border-radius:var(--radius);
+  padding:clamp(14px,3vw,22px) clamp(8px,2vw,14px);
+  text-align:center;cursor:pointer;transition:all .22s;
+  box-shadow:var(--shadow);
+}
+.game-card:hover{transform:translateY(-6px) scale(1.04);box-shadow:var(--shadow-lg);border-color:var(--purple2);}
+.game-card .icon{font-size:clamp(2.4rem,5vw,3.6rem);display:block;margin-bottom:8px;line-height:1;}
+.game-card .lbl{font-family:'Fredoka One',cursive;font-size:clamp(.85rem,2vw,1.05rem);color:var(--text2);}
+
+/* ── BACK BTN ── */
+.back-btn{
+  font-family:'Fredoka One',cursive;background:var(--white);border:2px solid var(--border);
+  color:var(--text2);padding:8px 20px;border-radius:50px;cursor:pointer;
+  font-size:clamp(.85rem,2vw,1rem);margin-bottom:14px;
+  display:inline-flex;align-items:center;gap:6px;transition:all .2s;box-shadow:var(--shadow);
+}
+.back-btn:hover{border-color:var(--purple);color:var(--purple);}
+
+/* ── GAME TITLE ── */
+.gtitle{font-family:'Fredoka One',cursive;font-size:clamp(1.2rem,3.5vw,1.7rem);color:var(--purple);text-align:center;margin-bottom:12px;}
+
+/* ── BIG BUTTONS ── */
+.big-btn{
+  font-family:'Fredoka One',cursive;font-size:clamp(1rem,2.5vw,1.25rem);
+  padding:clamp(10px,2vw,14px) clamp(22px,4vw,34px);
+  border-radius:50px;border:none;cursor:pointer;
+  transition:all .2s;display:inline-flex;align-items:center;gap:8px;
+}
+.big-btn:hover{transform:scale(1.06);}
+.big-btn:active{transform:scale(.95);}
+.btn-purple{background:var(--purple);color:#fff;box-shadow:0 4px 16px rgba(124,58,237,.4);}
+.btn-pink{background:var(--pink);color:#fff;box-shadow:0 4px 16px rgba(236,72,153,.4);}
+.btn-green{background:var(--green);color:#fff;box-shadow:0 4px 16px rgba(5,150,105,.35);}
+
+/* ── CHOICE ITEMS (shared correct/wrong) ── */
+.choice-correct{background:#d1fae5!important;border-color:var(--green)!important;animation:bounce .45s;}
+.choice-wrong{background:#fee2e2!important;border-color:var(--red)!important;animation:wiggle .4s;}
+
+/* ════════════════════════════════════
+   MATH GAMES
+════════════════════════════════════ */
+/* Story math */
+.story-box{background:var(--purple3);border:2px solid var(--purple2);border-radius:var(--radius);padding:clamp(12px,3vw,20px);margin-bottom:14px;text-align:center;}
+.story-text{font-family:'Fredoka One',cursive;font-size:clamp(1rem,3vw,1.4rem);color:var(--purple);margin-bottom:10px;line-height:1.5;}
+.story-emojis{font-size:clamp(2rem,5vw,3.2rem);display:flex;justify-content:center;align-items:center;gap:clamp(4px,1vw,10px);flex-wrap:wrap;margin:10px 0;}
+.story-op{font-family:'Fredoka One',cursive;font-size:clamp(1.8rem,4vw,2.4rem);color:var(--pink);padding:0 4px;}
+.math-choices{display:flex;gap:clamp(8px,2vw,14px);justify-content:center;flex-wrap:wrap;margin-top:10px;}
+.math-choice{
+  font-family:'Fredoka One',cursive;font-size:clamp(1.4rem,3.5vw,2rem);
+  background:var(--white);border:3px solid var(--border);border-radius:var(--radius-sm);
+  min-width:clamp(56px,10vw,76px);height:clamp(56px,10vw,76px);
+  display:flex;align-items:center;justify-content:center;
+  cursor:pointer;transition:all .2s;color:var(--text);box-shadow:var(--shadow);
+}
+.math-choice:hover{transform:scale(1.1);border-color:var(--purple);}
+
+/* Subtraction cross-out */
+.cross{position:relative;display:inline-block;}
+.cross.struck::after{content:'';position:absolute;left:-6%;top:50%;width:112%;height:3px;background:var(--red);border-radius:2px;transform:rotate(-12deg);}
+
+/* ════════════════════════════════════
+   COLOR GAMES
+════════════════════════════════════ */
+.color-swatch{width:clamp(60px,12vw,90px);height:clamp(60px,12vw,90px);border-radius:50%;border:4px solid rgba(0,0,0,.08);box-shadow:var(--shadow-lg);cursor:pointer;transition:all .2s;display:inline-block;}
+.color-swatch:hover{transform:scale(1.12);}
+.swatch-grid{display:flex;flex-wrap:wrap;gap:clamp(10px,2vw,16px);justify-content:center;margin:10px 0;}
+
+/* Odd-one-out */
+.ooo-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:clamp(8px,2vw,14px);max-width:500px;margin:0 auto;}
+.ooo-cell{
+  background:var(--white);border:3px solid var(--border);border-radius:var(--radius-sm);
+  aspect-ratio:1;display:flex;align-items:center;justify-content:center;
+  cursor:pointer;transition:all .2s;box-shadow:var(--shadow);
+}
+.ooo-cell:hover{transform:scale(1.06);border-color:var(--purple2);}
+
+/* Mixing colors */
+.mix-container{display:flex;align-items:center;justify-content:center;flex-wrap:wrap;gap:clamp(10px,3vw,20px);margin:10px 0;}
+.mix-circle{width:clamp(70px,12vw,100px);height:clamp(70px,12vw,100px);border-radius:50%;border:4px solid rgba(0,0,0,.1);box-shadow:var(--shadow-lg);}
+.mix-plus{font-family:'Fredoka One',cursive;font-size:clamp(1.5rem,3vw,2.2rem);color:var(--purple);}
+.mix-equals{font-family:'Fredoka One',cursive;font-size:clamp(1.5rem,3vw,2.2rem);color:var(--pink);}
+.mix-result{width:clamp(70px,12vw,100px);height:clamp(70px,12vw,100px);border-radius:50%;border:4px dashed var(--border);box-shadow:var(--shadow);}
+.mix-choices{display:flex;gap:clamp(8px,2vw,14px);justify-content:center;flex-wrap:wrap;margin-top:12px;}
+.mix-choice{width:clamp(60px,10vw,80px);height:clamp(60px,10vw,80px);border-radius:50%;border:4px solid var(--border);cursor:pointer;transition:all .2s;box-shadow:var(--shadow);}
+.mix-choice:hover{transform:scale(1.14);border-color:var(--purple);}
+
+/* ════════════════════════════════════
+   RHYMING / SHAPES / LETTERS / ANIMALS
+════════════════════════════════════ */
+.two-grid{display:grid;grid-template-columns:1fr 1fr;gap:clamp(10px,2vw,16px);}
+.choice-card{
+  background:var(--white);border:3px solid var(--border);border-radius:var(--radius);
+  padding:clamp(12px,2.5vw,18px) clamp(8px,1.5vw,12px);
+  text-align:center;cursor:pointer;transition:all .2s;
+  display:flex;flex-direction:column;align-items:center;gap:6px;box-shadow:var(--shadow);
+}
+.choice-card:hover{border-color:var(--purple2);transform:scale(1.04);}
+.choice-card .emo{font-size:clamp(2.2rem,5vw,3.4rem);line-height:1;}
+.choice-card .wrd{font-family:'Fredoka One',cursive;font-size:clamp(.85rem,2vw,1.1rem);color:var(--text2);}
+
+.big-emo{font-size:clamp(4rem,10vw,7rem);display:block;text-align:center;animation:float 3s ease-in-out infinite;line-height:1;margin:8px 0;}
+.big-letter{font-family:'Fredoka One',cursive;font-size:clamp(4.5rem,11vw,7.5rem);text-align:center;color:var(--purple);animation:float 3s ease-in-out infinite;line-height:1;margin:6px 0;}
+
+.letter-choices{display:flex;gap:clamp(8px,2vw,14px);justify-content:center;flex-wrap:wrap;margin-top:10px;}
+.letter-choice{
+  font-family:'Fredoka One',cursive;font-size:clamp(1.6rem,3.5vw,2.2rem);
+  background:var(--white);border:3px solid var(--border);border-radius:var(--radius-sm);
+  width:clamp(64px,11vw,84px);height:clamp(64px,11vw,84px);
+  display:flex;align-items:center;justify-content:center;
+  cursor:pointer;transition:all .2s;color:var(--text);box-shadow:var(--shadow);
+}
+.letter-choice:hover{transform:scale(1.1);border-color:var(--pink);}
+
+/* ════════════════════════════════════
+   PATTERN GAME
+════════════════════════════════════ */
+.pattern-row{display:flex;align-items:center;flex-wrap:wrap;gap:clamp(6px,1.5vw,12px);justify-content:center;margin:12px 0;}
+.pattern-item{font-size:clamp(2.2rem,5vw,3.4rem);padding:6px;border-radius:12px;background:var(--white);border:2px solid var(--border);box-shadow:var(--shadow);line-height:1;min-width:clamp(52px,9vw,70px);text-align:center;}
+.pattern-blank{
+  font-size:clamp(2rem,4.5vw,3rem);min-width:clamp(52px,9vw,70px);
+  background:var(--purple3);border:3px dashed var(--purple2);border-radius:12px;
+  display:flex;align-items:center;justify-content:center;cursor:pointer;padding:6px;
+  font-family:'Fredoka One',cursive;color:var(--textsoft);transition:all .2s;
+}
+.pattern-choices{display:flex;gap:clamp(8px,2vw,14px);justify-content:center;flex-wrap:wrap;margin-top:10px;}
+.pattern-choice{
+  font-size:clamp(2rem,4.5vw,3rem);padding:8px;border-radius:12px;
+  background:var(--white);border:3px solid var(--border);box-shadow:var(--shadow);
+  cursor:pointer;transition:all .2s;min-width:clamp(52px,9vw,70px);text-align:center;
+}
+.pattern-choice:hover{transform:scale(1.1);border-color:var(--purple);}
+
+/* ════════════════════════════════════
+   FIND THE PRINCESS (Haystack)
+════════════════════════════════════ */
+.haystack-wrap{position:relative;width:100%;max-width:600px;margin:0 auto;}
+.haystack-canvas{
+  width:100%;aspect-ratio:4/3;border-radius:var(--radius);border:3px solid var(--border);
+  background:linear-gradient(135deg,#fdf4ff,#fce7f3);
+  position:relative;overflow:hidden;cursor:crosshair;
+  box-shadow:var(--shadow-lg);user-select:none;
+}
+.hay-item{position:absolute;font-size:clamp(1.6rem,3.5vw,2.4rem);cursor:pointer;transition:transform .15s;line-height:1;transform-origin:center;}
+.hay-item:hover{transform:scale(1.15);}
+.hay-item.found-flash{animation:sparkleF .5s ease;}
+@keyframes sparkleF{0%{transform:scale(1)}30%{transform:scale(1.6)}70%{transform:scale(.8)}100%{transform:scale(1)}}
+.found-ring{position:absolute;border-radius:50%;border:4px solid var(--pink);animation:foundRing .5s ease forwards;pointer-events:none;}
+@keyframes foundRing{0%{transform:scale(.4);opacity:1}100%{transform:scale(1.8);opacity:0}}
+.hay-score{font-family:'Fredoka One',cursive;font-size:clamp(1rem,2.5vw,1.35rem);text-align:center;color:var(--purple);margin-bottom:6px;}
+.hay-timer{font-family:'Fredoka One',cursive;font-size:clamp(.9rem,2vw,1.1rem);text-align:center;color:var(--textsoft);margin-bottom:8px;}
+.hay-targets{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin-bottom:10px;align-items:center;}
+.hay-target{font-size:clamp(1.6rem,3.5vw,2.4rem);padding:6px 10px;background:var(--white);border-radius:var(--radius-sm);border:2.5px solid var(--border);box-shadow:var(--shadow);}
+.hay-target.done{opacity:.35;text-decoration:line-through;}
+
+/* ════════════════════════════════════
+   FUN GAMES
+════════════════════════════════════ */
+/* TIC TAC TOE */
+.ttt-board{display:grid;grid-template-columns:repeat(3,1fr);gap:clamp(6px,1.5vw,10px);max-width:min(300px,85vw);margin:0 auto 12px;}
+.ttt-cell{
+  background:var(--white);border:3px solid var(--border);border-radius:var(--radius-sm);
+  aspect-ratio:1;display:flex;align-items:center;justify-content:center;
+  font-size:clamp(2rem,5vw,3rem);cursor:pointer;transition:all .2s;
+  min-height:clamp(70px,12vw,96px);box-shadow:var(--shadow);
+}
+.ttt-cell:hover:empty{background:var(--purple3);border-color:var(--purple2);}
+.ttt-cell.xc{color:var(--purple);}
+.ttt-cell.oc{color:var(--pink);}
+.ttt-cell.win{background:var(--gold2);border-color:var(--gold);animation:glowP .8s infinite;}
+.ttt-status{font-family:'Fredoka One',cursive;font-size:clamp(1rem,2.5vw,1.2rem);text-align:center;color:var(--text2);margin-bottom:10px;}
+
+/* MEMORY */
+.mem-grid{display:grid;gap:clamp(6px,1.5vw,10px);max-width:min(480px,95vw);margin:0 auto;}
+.mem-card{aspect-ratio:1;border-radius:var(--radius-sm);cursor:pointer;position:relative;transform-style:preserve-3d;transition:transform .3s;min-height:clamp(60px,10vw,88px);}
+.mem-card.flipped{transform:rotateY(180deg);}
+.mem-card.matched{opacity:.65;cursor:default;}
+.mem-front,.mem-back{position:absolute;inset:0;border-radius:var(--radius-sm);display:flex;align-items:center;justify-content:center;font-size:clamp(1.7rem,3.5vw,2.4rem);backface-visibility:hidden;}
+.mem-back{background:linear-gradient(135deg,var(--purple),#db2777);border:2px solid var(--purple2);}
+.mem-front{background:var(--white);border:2px solid var(--border);transform:rotateY(180deg);box-shadow:var(--shadow);}
+.mem-front.mg{background:#d1fae5;border-color:var(--green);}
+
+/* BUBBLE POP */
+.bub-area{position:relative;height:clamp(260px,45vw,380px);background:linear-gradient(135deg,var(--purple3),var(--pink3));border-radius:var(--radius);overflow:hidden;cursor:crosshair;border:2px solid var(--border);}
+.bubble-el{position:absolute;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:clamp(1.2rem,2.5vw,1.8rem);cursor:pointer;user-select:none;border:3px solid rgba(255,255,255,.5);animation:float 2s ease-in-out infinite;}
+.bubble-el:hover{transform:scale(1.12);}
+.bubble-el.popped{animation:burst .35s ease forwards;pointer-events:none;}
+
+/* ════════════════════════════════════
+   CASTLE PAGE
+════════════════════════════════════ */
+.castle-page{max-width:min(560px,100%);margin:0 auto;}
+.castle-svg-wrap{
+  background:linear-gradient(180deg,#dbeafe 0%,#bfdbfe 55%,#bbf7d0 100%);
+  border-radius:var(--radius);border:2px solid var(--border);
+  padding:clamp(10px,3vw,18px);text-align:center;margin-bottom:14px;
+  box-shadow:var(--shadow-lg);
+}
+.castle-svg-wrap svg{width:100%;max-width:360px;height:auto;}
+.clvl-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:clamp(6px,1.5vw,10px);margin-bottom:14px;}
+.clvl-card{background:var(--white);border:2px solid var(--border);border-radius:var(--radius-sm);padding:10px 6px;text-align:center;box-shadow:var(--shadow);transition:all .2s;}
+.clvl-card.done{border-color:var(--gold);background:var(--gold2);}
+.clvl-card.cur{border-color:var(--purple);background:var(--purple3);animation:glowP 1.5s infinite;}
+.clvl-icon{font-size:clamp(1.3rem,3vw,1.8rem);display:block;margin-bottom:3px;}
+.clvl-name{font-family:'Fredoka One',cursive;font-size:clamp(.6rem,1.4vw,.78rem);color:var(--text2);}
+.clvl-pts{font-family:'Fredoka One',cursive;font-size:clamp(.55rem,1.2vw,.7rem);color:var(--textsoft);}
+.total-box{background:var(--gold2);border:2px solid var(--gold);border-radius:var(--radius);padding:14px;text-align:center;}
+.total-box .num{font-family:'Fredoka One',cursive;font-size:clamp(1.8rem,4vw,2.4rem);color:var(--gold);}
+
+/* ════════════════════════════════════
+   FEEDBACK OVERLAY
+════════════════════════════════════ */
+.fb-overlay{display:none;position:fixed;inset:0;z-index:200;align-items:center;justify-content:center;pointer-events:none;}
+.fb-overlay.show{display:flex;}
+.fb-msg{font-family:'Fredoka One',cursive;font-size:clamp(1.5rem,4vw,2.4rem);padding:clamp(12px,3vw,20px) clamp(24px,5vw,44px);border-radius:24px;animation:pop .4s ease;text-align:center;max-width:90vw;box-shadow:var(--shadow-lg);}
+.fb-msg.ok{background:linear-gradient(135deg,#059669,#34d399);color:#fff;}
+.fb-msg.no{background:linear-gradient(135deg,#dc2626,#f87171);color:#fff;}
+
+/* CONFETTI */
+.confetti-wrap{position:fixed;inset:0;pointer-events:none;z-index:300;display:none;}
+.cp{position:absolute;width:10px;height:10px;border-radius:2px;animation:confettiFall linear forwards;}
+
+/* UTIL */
+.center{text-align:center;}.mt{margin-top:12px;}.row{display:flex;align-items:center;gap:10px;flex-wrap:wrap;}
+</style>
+</head>
+<body>
+<div class="confetti-wrap" id="confetti"></div>
+<div class="fb-overlay" id="fbOv"><div class="fb-msg" id="fbMsg"></div></div>
+
+<div class="app">
+
+<!-- HEADER -->
+<header class="hdr">
+  <div class="hdr-logo">👸✨ Princess Palace</div>
+  <div class="hdr-right">
+    <div class="score-pill">
+      <span style="font-size:1.3rem;animation:shimmer 1.5s infinite">⭐</span>
+      <span class="score-num" id="scoreEl">0</span>
+      <span style="font-size:.8rem;color:#fde68a;font-weight:700">pts</span>
+    </div>
+  </div>
+</header>
+
+<!-- CASTLE BANNER -->
+<div class="castle-banner">
+  <svg class="castle-mini" id="miniCastle" width="58" height="58" viewBox="0 0 300 260" onclick="openSection('castle','nc')"></svg>
+  <div class="castle-info">
+    <div class="castle-lname" id="cLvlName">🏰 Build Cinderella's Castle!</div>
+    <div class="castle-sub" id="cSub">Earn stars to unlock each part!</div>
+    <div class="castle-track"><div class="castle-fill" id="cFill" style="width:0%"></div></div>
+  </div>
+  <div class="castle-badge" id="cBadge">0 / 25</div>
+</div>
+
+<!-- NAV -->
+<nav class="nav">
+  <button class="nav-btn active" id="nl" onclick="openSection('learn','nl')">📚 Learn</button>
+  <button class="nav-btn fun" id="nf" onclick="openSection('fun','nf')">🎮 Fun Zone</button>
+  <button class="nav-btn castle" id="nc" onclick="openSection('castle','nc')">🏰 My Castle</button>
+</nav>
+
+<!-- MAIN -->
+<main class="main">
+
+  <!-- ══ LEARN PANEL ══ -->
+  <div class="panel active" id="panel-learn">
+    <div id="lmenu">
+      <div class="mascot-row">
+        <div class="mascot-sm" id="mascotLearn"></div>
+        <div class="bubble">Welcome to Princess Palace! 👸 Answer questions to build Cinderella's Castle! Pick a game! ✨</div>
+      </div>
+      <div class="sec-head">🌟 Learning Games</div>
+      <div class="game-grid">
+        <div class="game-card" onclick="startLearn('math')"><span class="icon">➕</span><div class="lbl">Math Magic</div></div>
+        <div class="game-card" onclick="startLearn('subtract')"><span class="icon">➖</span><div class="lbl">Take Away!</div></div>
+        <div class="game-card" onclick="startLearn('pattern')"><span class="icon">🔮</span><div class="lbl">Patterns!</div></div>
+        <div class="game-card" onclick="startLearn('color-sort')"><span class="icon">🎨</span><div class="lbl">Color Sort</div></div>
+        <div class="game-card" onclick="startLearn('color-mix')"><span class="icon">🌈</span><div class="lbl">Mix Colors</div></div>
+        <div class="game-card" onclick="startLearn('odd-one-out')"><span class="icon">🔍</span><div class="lbl">Odd One Out</div></div>
+        <div class="game-card" onclick="startLearn('rhyme')"><span class="icon">🎵</span><div class="lbl">Rhyme Time</div></div>
+        <div class="game-card" onclick="startLearn('shapes')"><span class="icon">🔷</span><div class="lbl">Shapes!</div></div>
+        <div class="game-card" onclick="startLearn('letters')"><span class="icon">🔤</span><div class="lbl">Letters!</div></div>
+        <div class="game-card" onclick="startLearn('animals')"><span class="icon">🐾</span><div class="lbl">Animal Sounds</div></div>
+      </div>
+    </div>
+    <div id="lgame" style="display:none">
+      <button class="back-btn" onclick="backLearn()">← Back</button>
+      <div id="lgame-content"></div>
+    </div>
+  </div>
+
+  <!-- ══ FUN PANEL ══ -->
+  <div class="panel" id="panel-fun">
+    <div id="fmenu">
+      <div class="mascot-row">
+        <div class="mascot-sm" id="mascotFun"></div>
+        <div class="bubble pink">Time to play! 🎉 Pick a game and have fun!</div>
+      </div>
+      <div class="sec-head">🎮 Fun Games</div>
+      <div class="game-grid">
+        <div class="game-card" onclick="startFun('find')"><span class="icon">🔎</span><div class="lbl">Find the Princess!</div></div>
+        <div class="game-card" onclick="startFun('ttt')"><span class="icon">❎</span><div class="lbl">Tic Tac Toe</div></div>
+        <div class="game-card" onclick="startFun('memory')"><span class="icon">🧠</span><div class="lbl">Memory Match</div></div>
+        <div class="game-card" onclick="startFun('bubbles')"><span class="icon">🫧</span><div class="lbl">Bubble Pop!</div></div>
+      </div>
+    </div>
+    <div id="fgame" style="display:none">
+      <button class="back-btn" onclick="backFun()">← Back</button>
+      <div id="fgame-content"></div>
+    </div>
+  </div>
+
+  <!-- ══ CASTLE PANEL ══ -->
+  <div class="panel" id="panel-castle">
+    <div class="castle-page">
+      <div class="sec-head">🏰 Cinderella's Castle</div>
+      <div style="font-family:'Fredoka One',cursive;font-size:clamp(.95rem,2.5vw,1.1rem);text-align:center;color:var(--purple);margin-bottom:10px" id="cStageMsg">Keep earning stars to build the castle!</div>
+      <div class="castle-svg-wrap"><svg id="castleBig" viewBox="0 0 300 260"></svg></div>
+      <div class="clvl-grid" id="cLvlGrid"></div>
+      <div class="total-box">
+        <div style="font-family:'Fredoka One',cursive;font-size:1rem;color:var(--gold)">Total Stars ⭐</div>
+        <div class="num" id="cTotalEl">0</div>
+        <div style="font-size:.82rem;color:var(--textsoft);margin-top:3px">Keep playing to unlock more!</div>
+      </div>
+    </div>
+  </div>
+
+</main>
+</div><!-- .app -->
+
+<script>
+// ══════════════════════════════════════════
+// CASTLE SYSTEM
+// ══════════════════════════════════════════
+const LEVELS=[
+  {n:'Moat & Gate',   e:'🌊',pts:0,  msg:'The adventure starts! The castle gate is open! 🚪'},
+  {n:'Castle Walls',  e:'🧱',pts:25, msg:'Strong walls are built! 🧱 Keep going!'},
+  {n:'Main Tower',    e:'🗼',pts:65, msg:'The tallest tower rises! 🗼 Wonderful!'},
+  {n:'Side Towers',   e:'🏰',pts:120,msg:'Two more towers! The castle grows! 🏰'},
+  {n:'Royal Flags',   e:'🚩',pts:185,msg:'The royal flags fly high! 🚩 So majestic!'},
+  {n:'Magic Stars',   e:'✨',pts:260,msg:'Magic sparkles fill the sky! ✨ Almost there!'},
+  {n:'Princess! 👸',  e:'👸',pts:350,msg:'Cinderella has arrived! 👸✨ You built the whole castle!'},
+];
+let totalPts=0, curLv=0;
+
+function getLv(p){let l=0;for(let i=0;i<LEVELS.length;i++)if(p>=LEVELS[i].pts)l=i;return l;}
+
+function addPts(p){
+  const prev=curLv; totalPts+=p;
+  document.getElementById('scoreEl').textContent=totalPts;
+  document.getElementById('cTotalEl').textContent=totalPts;
+  curLv=getLv(totalPts); updateBanner();
+  if(curLv>prev){setTimeout(()=>{showFB(true,'🏰 New piece! '+LEVELS[curLv].e+' '+LEVELS[curLv].n+'!');confetti();},700);}
+  if(p>0)confetti();
+}
+
+function updateBanner(){
+  const lv=LEVELS[curLv];
+  const nx=LEVELS[Math.min(curLv+1,LEVELS.length-1)];
+  document.getElementById('cLvlName').textContent=lv.e+' Level '+(curLv+1)+': '+lv.n;
+  document.getElementById('cStageMsg').textContent=lv.msg;
+  if(curLv<LEVELS.length-1){
+    const pct=Math.min(100,Math.round((totalPts-lv.pts)/(nx.pts-lv.pts)*100));
+    document.getElementById('cFill').style.width=pct+'%';
+    document.getElementById('cBadge').textContent=totalPts+' / '+nx.pts;
+    document.getElementById('cSub').textContent='Next: '+nx.n+' at '+nx.pts+' pts!';
+  }else{
+    document.getElementById('cFill').style.width='100%';
+    document.getElementById('cBadge').textContent=totalPts+' ⭐';
+    document.getElementById('cSub').textContent='🎉 Castle Complete!';
+  }
+  renderLvGrid(); drawCastle(document.getElementById('castleBig'),curLv);
+  drawCastle(document.getElementById('miniCastle'),curLv);
+}
+
+function renderLvGrid(){
+  document.getElementById('cLvlGrid').innerHTML=LEVELS.map((lv,i)=>{
+    let c='clvl-card'; if(i<curLv)c+=' done'; if(i===curLv)c+=' cur';
+    return`<div class="${c}"><span class="clvl-icon">${i<=curLv?lv.e:'🔒'}</span><div class="clvl-name">${lv.n}</div><div class="clvl-pts">${lv.pts}pts</div></div>`;
+  }).join('');
+}
+
+// ── Castle SVG ──
+function drawCastle(svg,lv){
+  svg.innerHTML='';
+  const ns='http://www.w3.org/2000/svg';
+  const E=(t,a,p)=>{const e=document.createElementNS(ns,t);Object.entries(a).forEach(([k,v])=>e.setAttribute(k,v));(p||svg).appendChild(e);return e;};
+  const W=300,H=260,gy=220;
+  E('rect',{x:0,y:0,width:W,height:H,fill:'#bfdbfe'});
+  [[40,28,16,20],[56,22,20,24],[72,28,14,16],[210,38,13,16],[224,32,17,20],[238,38,11,13]].forEach(([cx,cy,rx,ry])=>E('ellipse',{cx,cy,rx,ry,fill:'rgba(255,255,255,.88)'}));
+  E('rect',{x:0,y:gy,width:W,height:H-gy,fill:'#86efac'});
+  [[30,gy,20,12],[260,gy,20,12]].forEach(([cx,cy,rx,ry])=>E('ellipse',{cx,cy,rx,ry,fill:'#4ade80'}));
+  if(lv>=0){
+    E('rect',{x:55,y:gy+4,width:190,height:16,fill:'#60a5fa',rx:7});
+    ['M75 '+(gy+11)+' Q100 '+(gy+8)+' 125 '+(gy+11),'M150 '+(gy+11)+' Q175 '+(gy+8)+' 200 '+(gy+11)].forEach(d=>E('path',{d,fill:'none',stroke:'rgba(255,255,255,.55)','stroke-width':1.5}));
+    E('rect',{x:122,y:gy-4,width:56,height:10,fill:'#b45309',rx:3});
+    E('path',{d:'M122 '+gy+' L122 '+(gy-22)+' Q150 '+(gy-38)+' 178 '+(gy-22)+' L178 '+gy,fill:'#1e3a8a',stroke:'#1d4ed8','stroke-width':2});
+    E('rect',{x:135,y:gy-32,width:30,height:32,fill:'#1e3a8a',rx:2});
+    for(let i=0;i<3;i++)E('rect',{x:138+i*9,y:gy-30,width:4,height:22,fill:'#3b82f6',rx:1});
+  }
+  if(lv>=1){
+    E('rect',{x:75,y:gy-72,width:150,height:72,fill:'#e2e8f0',stroke:'#cbd5e1','stroke-width':2});
+    for(let r=0;r<3;r++)for(let c=0;c<4;c++)E('rect',{x:77+c*36+(r%2*18),y:gy-16-r*22,width:32,height:18,fill:'none',stroke:'#e2e8f0','stroke-width':1});
+    for(let i=0;i<8;i++)E('rect',{x:75+i*19,y:gy-80,width:13,height:12,fill:'#e2e8f0',stroke:'#cbd5e1','stroke-width':1.5,rx:1});
+    E('rect',{x:88,y:gy-58,width:22,height:26,fill:'#93c5fd',stroke:'#3b82f6','stroke-width':1.5,rx:4});
+    E('rect',{x:190,y:gy-58,width:22,height:26,fill:'#93c5fd',stroke:'#3b82f6','stroke-width':1.5,rx:4});
+    [[99,gy-58,99,gy-32,88,gy-45,110,gy-45],[201,gy-58,201,gy-32,190,gy-45,212,gy-45]].forEach(([x1,y1,x2,y2,x3,y3,x4,y4])=>{E('line',{x1,y1,x2,y2,stroke:'#3b82f6','stroke-width':1.5});E('line',{x1:x3,y1:y3,x2:x4,y2:y4,stroke:'#3b82f6','stroke-width':1.5});});
+  }
+  if(lv>=2){
+    E('rect',{x:115,y:gy-155,width:70,height:83,fill:'#f1f5f9',stroke:'#cbd5e1','stroke-width':2});
+    for(let i=0;i<4;i++)E('rect',{x:115+i*18,y:gy-163,width:13,height:13,fill:'#f1f5f9',stroke:'#cbd5e1','stroke-width':2,rx:1});
+    E('rect',{x:124,y:gy-138,width:20,height:28,fill:'#bfdbfe',stroke:'#3b82f6','stroke-width':1.5,rx:5});
+    E('rect',{x:156,y:gy-138,width:20,height:28,fill:'#bfdbfe',stroke:'#3b82f6','stroke-width':1.5,rx:5});
+    E('path',{d:'M133 '+gy+' L133 '+(gy-45)+' Q150 '+(gy-60)+' 167 '+(gy-45)+' L167 '+gy,fill:'#1e3a8a',stroke:'#1d4ed8','stroke-width':2});
+    E('rect',{x:137,y:gy-50,width:26,height:50,fill:'#1e3a8a',rx:2});
+    E('polygon',{points:'115,'+(gy-155)+' 150,'+(gy-200)+' 185,'+(gy-155),fill:'#ec4899',stroke:'#be185d','stroke-width':2});
+    E('circle',{cx:150,cy:gy-168,r:8,fill:'#bfdbfe',stroke:'#3b82f6','stroke-width':1.5});
+  }
+  if(lv>=3){
+    [[46,198,56,46,74,165,102,124,59,112,18,24],[198,248,56,46,226,165,254,124,211,112,18,24]].forEach(([x,xb,w,h,tx,ty,tb,tbb,wx,wy,ww,wh],_idx)=>{
+      E('rect',{x,y:gy-h,width:w,height:h,fill:'#f8fafc',stroke:'#cbd5e1','stroke-width':2});
+      for(let i=0;i<3;i++)E('rect',{x:x+i*19,y:gy-h-8,width:14,height:12,fill:'#f8fafc',stroke:'#cbd5e1','stroke-width':1.5,rx:1});
+      E('polygon',{points:x+','+(gy-h)+' '+tx+','+(gy-ty)+' '+(x+w)+','+(gy-h),fill:'#a78bfa',stroke:'#7c3aed','stroke-width':2});
+      E('rect',{x:wx,y:gy-wy,width:ww,height:wh,fill:'#bfdbfe',stroke:'#3b82f6','stroke-width':1.5,rx:4});
+    });
+  }
+  if(lv>=4){
+    [[150,gy-200,150,gy-222,150,gy-222,174,gy-214,150,gy-204,'#ef4444'],[74,gy-165,74,gy-185,74,gy-185,94,gy-178,74,gy-168,'#3b82f6'],[226,gy-165,226,gy-185,226,gy-185,246,gy-178,226,gy-168,'#3b82f6']].forEach(([lx1,ly1,lx2,ly2,px1,py1,px2,py2,px3,py3,fc])=>{
+      E('line',{x1:lx1,y1:ly1,x2:lx2,y2:ly2,stroke:'#6b7280','stroke-width':2});
+      E('polygon',{points:px1+','+py1+' '+px2+','+py2+' '+px3+','+py3,fill:fc});
+    });
+  }
+  if(lv>=5){
+    [[28,44],[268,54],[14,88],[280,95],[50,10],[246,18],[150,5],[100,20],[200,22]].forEach(([sx,sy])=>{
+      const r=4.5,pts=[];for(let i=0;i<10;i++){const a=i*36*Math.PI/180,rd=i%2===0?r:r*.42;pts.push((sx+Math.cos(a-Math.PI/2)*rd)+','+(sy+Math.sin(a-Math.PI/2)*rd));}
+      E('polygon',{points:pts.join(' '),fill:'#fbbf24',opacity:.9});
+    });
+    E('circle',{cx:265,cy:30,r:12,fill:'#fef9c3'});
+    E('circle',{cx:270,cy:26,r:9,fill:'#bfdbfe'});
+  }
+  if(lv>=6){
+    E('polygon',{points:'141,'+(gy-195)+' 144,'+(gy-201)+' 148,'+(gy-197)+' 150,'+(gy-203)+' 152,'+(gy-197)+' 156,'+(gy-201)+' 159,'+(gy-195),fill:'#fbbf24',stroke:'#d97706','stroke-width':1});
+    E('circle',{cx:150,cy:gy-188,r:8,fill:'#fde68a'});
+    E('polygon',{points:'140,'+(gy-170)+' 150,'+(gy-148)+' 160,'+(gy-170),fill:'#60a5fa',stroke:'#3b82f6','stroke-width':1});
+    E('rect',{x:145,y:gy-182,width:10,height:14,fill:'#fde68a',rx:2});
+    E('line',{x1:160,y1:gy-190,x2:172,y2:gy-202,stroke:'#a855f7','stroke-width':2});
+    for(let a=0;a<6;a++){const ag=a*60*Math.PI/180;E('line',{x1:172,y1:gy-202,x2:172+Math.cos(ag)*8,y2:gy-202+Math.sin(ag)*8,stroke:'#fbbf24','stroke-width':1.5});}
+    E('circle',{cx:172,cy:gy-202,r:3,fill:'#fbbf24'});
+    [[38,38,'#ef4444'],[262,48,'#a855f7'],[82,16,'#f59e0b'],[218,16,'#10b981']].forEach(([fx,fy,fc])=>{
+      for(let a=0;a<8;a++){const ag=a*45*Math.PI/180;E('line',{x1:fx,y1:fy,x2:fx+Math.cos(ag)*16,y2:fy+Math.sin(ag)*16,stroke:fc,'stroke-width':2});E('circle',{cx:fx+Math.cos(ag)*16,cy:fy+Math.sin(ag)*16,r:2.5,fill:fc});}
+    });
+    const t=document.createElementNS(ns,'text');t.setAttribute('x',150);t.setAttribute('y',H-3);t.setAttribute('text-anchor','middle');t.setAttribute('font-family','Fredoka One,cursive');t.setAttribute('font-size',10);t.setAttribute('fill','#7c3aed');t.textContent='✨ Bibbidi Bobbidi Boo! ✨';svg.appendChild(t);
+  }
+}
+
+// ══════════════════════════════════════════
+// NAVIGATION
+// ══════════════════════════════════════════
+function openSection(sec,btnId){
+  document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
+  document.getElementById('panel-'+sec).classList.add('active');
+  document.querySelectorAll('.nav-btn').forEach(b=>b.classList.remove('active'));
+  document.getElementById(btnId).classList.add('active');
+  if(sec==='castle'){drawCastle(document.getElementById('castleBig'),curLv);renderLvGrid();}
+}
+function backLearn(){clearBubTm();document.getElementById('lmenu').style.display='';document.getElementById('lgame').style.display='none';}
+function backFun(){clearBubTm();document.getElementById('fmenu').style.display='';document.getElementById('fgame').style.display='none';}
+function startLearn(g){document.getElementById('lmenu').style.display='none';document.getElementById('lgame').style.display='';({math:rMath,subtract:rSubtract,pattern:rPattern,'color-sort':rColorSort,'color-mix':rColorMix,'odd-one-out':rOddOneOut,rhyme:rRhyme,shapes:rShapes,letters:rLetters,animals:rAnimals})[g](document.getElementById('lgame-content'));}
+function startFun(g){document.getElementById('fmenu').style.display='none';document.getElementById('fgame').style.display='';({find:rFind,ttt:rTTT,memory:rMemory,bubbles:rBubbles})[g](document.getElementById('fgame-content'));}
+
+// ══════════════════════════════════════════
+// HELPERS
+// ══════════════════════════════════════════
+const P=()=>`<svg class="mascot-sm" style="width:clamp(52px,8vw,72px);height:clamp(52px,8vw,72px)" viewBox="0 0 80 80" xmlns="http://www.w3.org/2000/svg"><circle cx="40" cy="46" r="28" fill="#f9a8d4"/><ellipse cx="40" cy="54" rx="16" ry="10" fill="#fce7f3"/><path d="M22 36 Q24 18 40 18 Q56 18 58 36" fill="#fbbf24"/><circle cx="33" cy="42" r="5" fill="white"/><circle cx="47" cy="42" r="5" fill="white"/><circle cx="34" cy="43" r="3" fill="#1e1b4b"/><circle cx="48" cy="43" r="3" fill="#1e1b4b"/><circle cx="35" cy="42" r="1" fill="white"/><circle cx="49" cy="42" r="1" fill="white"/><ellipse cx="40" cy="50" rx="4" ry="3" fill="#f472b6"/><path d="M34 55 Q40 61 46 55" stroke="#db2777" stroke-width="2" fill="none" stroke-linecap="round"/><polygon points="28,16 32,8 36,16 40,6 44,16 48,8 52,16" fill="#fbbf24" stroke="#d97706" stroke-width="1"/><circle cx="40" cy="20" r="4" fill="#ec4899"/></svg>`;
+let fbT;
+function showFB(ok,msg){const o=document.getElementById('fbOv'),m=document.getElementById('fbMsg');m.className='fb-msg '+(ok?'ok':'no');m.textContent=msg;o.classList.add('show');clearTimeout(fbT);fbT=setTimeout(()=>o.classList.remove('show'),1600);}
+function confetti(){
+  const c=document.getElementById('confetti');c.style.display='block';c.innerHTML='';
+  ['#fbbf24','#ec4899','#a855f7','#34d399','#f97316','#60a5fa'].forEach(col=>{for(let j=0;j<4;j++){const p=document.createElement('div');p.className='cp';p.style.cssText=`left:${Math.random()*100}%;background:${col};animation-duration:${.8+Math.random()*1.1}s;animation-delay:${Math.random()*.45}s;border-radius:${Math.random()>.5?'50%':'3px'}`;c.appendChild(p);}});
+  setTimeout(()=>{c.style.display='none';},2400);
+}
+function shuffle(a){return [...a].sort(()=>Math.random()-.5);}
+function pick(a){return a[Math.floor(Math.random()*a.length)];}
+
+// ══════════════════════════════════════════
+// ➕ MATH: ADDITION with pictures
+// ══════════════════════════════════════════
+const MATHITEMS=[
+  {e:'🍭',name:'candy'},{e:'🌸',name:'flower'},{e:'⭐',name:'star'},
+  {e:'🦋',name:'butterfly'},{e:'🍰',name:'cake'},{e:'💎',name:'gem'},
+  {e:'🎀',name:'bow'},{e:'🌺',name:'hibiscus'},{e:'🍬',name:'sweet'},
+];
+function rMath(el){
+  const item=pick(MATHITEMS);
+  const a=1+Math.floor(Math.random()*4), b=1+Math.floor(Math.random()*4);
+  const ans=a+b;
+  const wrong=new Set();while(wrong.size<3){const w=Math.max(1,ans+Math.floor(Math.random()*5)-2);if(w!==ans)wrong.add(w);}
+  const choices=shuffle([...wrong,ans]);
+  el.innerHTML=`<div class="gtitle">➕ Math Magic!</div>
+  <div class="mascot-row">${P()}<div class="bubble">Count the ${item.name}s on EACH side, then add them together! 🧮</div></div>
+  <div class="story-box">
+    <div class="story-text">How many ${item.e} are there ALL TOGETHER?</div>
+    <div class="story-emojis">
+      <span>${item.e.repeat(a)}</span>
+      <span class="story-op">+</span>
+      <span>${item.e.repeat(b)}</span>
+    </div>
+    <div style="font-family:'Fredoka One',cursive;font-size:clamp(1.4rem,3vw,1.8rem);color:var(--text2);margin-top:6px">${a} + ${b} = ?</div>
+  </div>
+  <div class="math-choices">${choices.map(c=>`<div class="math-choice" onclick="chkMath(this,${c},${ans})">${c}</div>`).join('')}</div>`;
+}
+function chkMath(el,c,ans){
+  if(el.classList.contains('choice-correct')||el.classList.contains('choice-wrong'))return;
+  el.classList.add(c===ans?'choice-correct':'choice-wrong');
+  if(c===ans){showFB(true,'🌟 '+ans+' is right! +10 ⭐');addPts(10);setTimeout(()=>startLearn('math'),1600);}
+  else showFB(false,'Count again! You can do it! 💜');
+}
+
+// ══════════════════════════════════════════
+// ➖ MATH: SUBTRACTION with pictures
+// ══════════════════════════════════════════
+function rSubtract(el){
+  const item=pick(MATHITEMS);
+  const total=3+Math.floor(Math.random()*5);
+  const takeAway=1+Math.floor(Math.random()*Math.min(total-1,3));
+  const ans=total-takeAway;
+  const wrong=new Set();while(wrong.size<3){const w=Math.max(0,ans+Math.floor(Math.random()*5)-2);if(w!==ans&&w>=0)wrong.add(w);}
+  const choices=shuffle([...wrong,ans]);
+  const itemsHTML=Array.from({length:total},(_,i)=>`<span class="cross${i<takeAway?' struck':''}" style="font-size:clamp(2rem,5vw,3.2rem)">${item.e}</span>`).join('');
+  el.innerHTML=`<div class="gtitle">➖ Take Away!</div>
+  <div class="mascot-row">${P()}<div class="bubble">We started with ${total} ${item.name}s. ${takeAway} flew away! ✈️ How many are LEFT?</div></div>
+  <div class="story-box">
+    <div class="story-text">${total} ${item.e} take away ${takeAway} = ?</div>
+    <div class="story-emojis" style="gap:clamp(3px,1vw,8px)">${itemsHTML}</div>
+    <div style="font-family:'Fredoka One',cursive;font-size:clamp(1.1rem,2.5vw,1.5rem);color:var(--text2);margin-top:8px">The ones with ❌ are gone!</div>
+  </div>
+  <div class="math-choices">${choices.map(c=>`<div class="math-choice" onclick="chkSub(this,${c},${ans})">${c}</div>`).join('')}</div>`;
+}
+function chkSub(el,c,ans){
+  if(el.classList.contains('choice-correct')||el.classList.contains('choice-wrong'))return;
+  el.classList.add(c===ans?'choice-correct':'choice-wrong');
+  if(c===ans){showFB(true,'✨ Yes! '+ans+' left! +10 ⭐');addPts(10);setTimeout(()=>startLearn('subtract'),1600);}
+  else showFB(false,'Count the ones without ❌! 💜');
+}
+
+// ══════════════════════════════════════════
+// 🔮 PATTERN
+// ══════════════════════════════════════════
+const PATSETS=[
+  ['🌸','⭐'],['🎀','💜'],['🌺','🦋'],['👑','💎'],['🌙','⭐'],['🍭','🎀'],
+  ['🌸','🌸','💜'],['👸','👑','🌟'],['🦋','🌸','🌺'],
+];
+function rPattern(el){
+  const base=pick(PATSETS);
+  const rep=Math.ceil(8/base.length);
+  const full=[];for(let i=0;i<rep;i++)full.push(...base);
+  const seq=full.slice(0,Math.floor(Math.random()*2)+4+base.length);
+  const blankIdx=seq.length;
+  const answer=full[blankIdx%full.length]||base[blankIdx%base.length];
+  const wrong=new Set();const pool=['🌸','⭐','🎀','💜','🌺','🦋','👑','💎','🌙','🍭','🌟','🎵'];
+  while(wrong.size<3){const w=pick(pool);if(w!==answer)wrong.add(w);}
+  const choices=shuffle([...wrong,answer]);
+  el.innerHTML=`<div class="gtitle">🔮 What Comes Next?</div>
+  <div class="mascot-row">${P()}<div class="bubble">Look at the pattern! Can you figure out what comes next? 🔮</div></div>
+  <div class="pattern-row">${seq.map(s=>`<div class="pattern-item">${s}</div>`).join('')}<div class="pattern-blank">?</div></div>
+  <div class="pattern-choices">${choices.map(c=>`<div class="pattern-choice" onclick="chkPat(this,'${c}','${answer}')">${c}</div>`).join('')}</div>`;
+}
+function chkPat(el,c,ans){
+  if(el.classList.contains('choice-correct')||el.classList.contains('choice-wrong'))return;
+  el.classList.add(c===ans?'choice-correct':'choice-wrong');
+  if(c===ans){showFB(true,'🔮 You got the pattern! +10 ⭐');addPts(10);setTimeout(()=>startLearn('pattern'),1600);}
+  else showFB(false,'Look at what repeats! 💜');
+}
+
+// ══════════════════════════════════════════
+// 🎨 COLOR SORT
+// ══════════════════════════════════════════
+const CSORT_DATA=[
+  {buckets:[{l:'🔴 Red',bg:'#fecaca',bd:'#f87171',k:'red'},{l:'💛 Yellow',bg:'#fef9c3',bd:'#fde047',k:'yellow'},{l:'💜 Purple',bg:'var(--purple3)',bd:'var(--purple2)',k:'purple'}],
+   items:[{e:'🍎',k:'red'},{e:'🌹',k:'red'},{e:'❤️',k:'red'},{e:'🍋',k:'yellow'},{e:'⭐',k:'yellow'},{e:'🌻',k:'yellow'},{e:'💜',k:'purple'},{e:'🍇',k:'purple'},{e:'🔮',k:'purple'}]},
+  {buckets:[{l:'🟢 Green',bg:'#dcfce7',bd:'#86efac',k:'green'},{l:'🟠 Orange',bg:'#ffedd5',bd:'#fdba74',k:'orange'},{l:'💗 Pink',bg:'var(--pink3)',bd:'var(--pink2)',k:'pink'}],
+   items:[{e:'🌿',k:'green'},{e:'🐸',k:'green'},{e:'🥑',k:'green'},{e:'🍊',k:'orange'},{e:'🎃',k:'orange'},{e:'🦊',k:'orange'},{e:'🌸',k:'pink'},{e:'🦩',k:'pink'},{e:'🎀',k:'pink'}]},
+];
+let csSet=null,csCnt=0,csTouched=null;
+function rColorSort(el){
+  csSet=pick(CSORT_DATA); csCnt=0; csTouched=null;
+  const sh=shuffle(csSet.items);
+  el.innerHTML=`<div class="gtitle">🎨 Sort by Color!</div>
+  <div class="mascot-row">${P()}<div class="bubble">Drag — or tap an item then tap its color bucket! 🎨</div></div>
+  <div style="display:flex;gap:clamp(8px,2vw,14px);justify-content:center;flex-wrap:wrap;margin-bottom:10px">
+    ${csSet.buckets.map(b=>`<div style="min-width:80px;min-height:80px;background:${b.bg};border:3px dashed ${b.bd};border-radius:14px;padding:6px 4px;text-align:center;flex:1;max-width:120px;transition:all .2s" id="bk-${b.k}" ondragover="event.preventDefault();this.style.transform='scale(1.07)'" ondragleave="this.style.transform=''" ondrop="csDrop(event,'${b.k}')" onclick="csBktClick('${b.k}')">
+      <div style="font-family:'Fredoka One',cursive;font-size:clamp(.75rem,1.8vw,.9rem);color:var(--text);margin-bottom:4px">${b.l}</div>
+      <div id="bi-${b.k}" style="display:flex;flex-wrap:wrap;gap:3px;justify-content:center;min-height:24px"></div>
+    </div>`).join('')}
+  </div>
+  <div style="display:flex;flex-wrap:wrap;gap:clamp(6px,1.5vw,10px);justify-content:center;padding:10px;background:var(--purple3);border-radius:14px;border:2px solid var(--purple2)" id="csPool">
+    ${sh.map((item,i)=>`<div style="font-size:clamp(1.8rem,4vw,2.6rem);background:white;border:2.5px solid var(--border);border-radius:10px;width:clamp(46px,8vw,60px);height:clamp(46px,8vw,60px);display:flex;align-items:center;justify-content:center;cursor:grab;box-shadow:var(--shadow);transition:all .2s;user-select:none" id="cs${i}" draggable="true" data-key="${item.k}" ondragstart="csDragStart(event,${i})" onclick="csTap(${i})">${item.e}</div>`).join('')}
+  </div>
+  <div id="csProg" style="text-align:center;font-family:'Fredoka One',cursive;font-size:clamp(.85rem,2vw,1rem);color:var(--textsoft);margin-top:8px">Sort all 9! 0 / 9 done</div>`;
+}
+let csDragIdx=null;
+function csDragStart(e,i){csDragIdx=i;}
+function csDrop(e,k){e.preventDefault();document.getElementById('bk-'+k)&&(document.getElementById('bk-'+k).style.transform='');if(csDragIdx!==null){csPlace(csDragIdx,k);csDragIdx=null;}}
+function csTap(i){const el=document.getElementById('cs'+i);if(!el||el.style.display==='none')return;if(csTouched===i){document.querySelectorAll('[id^="cs"]').forEach(s=>s.style.outline='');csTouched=null;return;}document.querySelectorAll('[id^="cs"]').forEach(s=>s.style.outline='');csTouched=i;el.style.outline='3px solid var(--purple)';}
+function csBktClick(k){if(csTouched!==null){csPlace(csTouched,k);csTouched=null;document.querySelectorAll('[id^="cs"]').forEach(s=>s.style.outline='');}}
+function csPlace(i,k){
+  const item=document.getElementById('cs'+i);if(!item||item.style.display==='none')return;
+  if(item.getAttribute('data-key')!==k){showFB(false,'Try a different bucket! 💜');return;}
+  item.style.display='none';
+  const p=document.createElement('div');p.style.cssText='font-size:clamp(1.3rem,3vw,1.8rem);animation:pop .3s ease';p.textContent=item.textContent;
+  document.getElementById('bi-'+k).appendChild(p);csCnt++;
+  document.getElementById('csProg').textContent='Sort all 9! '+csCnt+' / 9 done';
+  showFB(true,'Great sort! +5 ⭐');addPts(5);
+  if(csCnt>=9)setTimeout(()=>{showFB(true,'🎉 ALL sorted! +10 bonus!');addPts(10);setTimeout(()=>startLearn('color-sort'),1500);},600);
+}
+
+// ══════════════════════════════════════════
+// 🌈 COLOR MIXING
+// ══════════════════════════════════════════
+const MIXES=[
+  {c1:'#ef4444',n1:'Red',c2:'#3b82f6',n2:'Blue',res:'#8b5cf6',rn:'Purple'},
+  {c1:'#ef4444',n1:'Red',c2:'#fde047',n2:'Yellow',res:'#f97316',rn:'Orange'},
+  {c1:'#3b82f6',n1:'Blue',c2:'#fde047',n2:'Yellow',res:'#22c55e',rn:'Green'},
+  {c1:'#ef4444',n1:'Red',c2:'#ffffff',n2:'White',res:'#fda4af',rn:'Pink'},
+  {c1:'#9333ea',n1:'Purple',c2:'#3b82f6',n2:'Blue',res:'#6366f1',rn:'Indigo'},
+];
+function rColorMix(el){
+  const mix=pick(MIXES);
+  const wrong=MIXES.filter(m=>m.rn!==mix.rn);
+  const wPick=shuffle(wrong).slice(0,3).map(m=>({color:m.res,name:m.rn}));
+  const choices=shuffle([{color:mix.res,name:mix.rn},...wPick]);
+  el.innerHTML=`<div class="gtitle">🌈 Mix the Colors!</div>
+  <div class="mascot-row">${P()}<div class="bubble">When you MIX these two colors, what do you get? 🌈</div></div>
+  <div class="mix-container">
+    <div class="mix-circle" style="background:${mix.c1}" title="${mix.n1}"></div>
+    <span class="mix-plus">+</span>
+    <div class="mix-circle" style="background:${mix.c2}" title="${mix.n2}"></div>
+    <span class="mix-equals">=</span>
+    <div class="mix-result"></div>
+  </div>
+  <div style="font-family:'Fredoka One',cursive;font-size:clamp(1rem,2.5vw,1.3rem);color:var(--text2);text-align:center;margin-bottom:6px">${mix.n1} + ${mix.n2} = ?</div>
+  <div class="mix-choices">${choices.map(c=>`<div class="mix-choice" style="background:${c.color}" title="${c.name}" onclick="chkMix(this,'${c.name}','${mix.rn}','${mix.res}')"></div>`).join('')}</div>
+  <div style="font-family:'Fredoka One',cursive;font-size:clamp(.85rem,2vw,1rem);color:var(--textsoft);text-align:center;margin-top:6px">Tap the color you would get!</div>`;
+}
+function chkMix(el,picked,correct,resColor){
+  if(el.classList.contains('choice-correct')||el.classList.contains('choice-wrong'))return;
+  if(picked===correct){
+    el.style.border='4px solid var(--green)';el.style.transform='scale(1.2)';
+    document.querySelector('.mix-result').style.background=resColor;
+    showFB(true,'🎨 '+correct+'! You mixed it right! +10 ⭐');addPts(10);setTimeout(()=>startLearn('color-mix'),1600);
+  }else{el.style.border='4px solid var(--red)';showFB(false,'Not that one! 💜 Try again!');}
+}
+
+// ══════════════════════════════════════════
+// 🔍 ODD ONE OUT
+// ══════════════════════════════════════════
+const OOO_SETS=[
+  {group:['🌸','🌺','🌼','🌻'],odd:'🐟',oodesc:'Fish',gdesc:'flowers'},
+  {group:['🔴','🟠','🟡','🟢'],odd:'🐱',oodesc:'Cat',gdesc:'colored circles'},
+  {group:['👑','💎','🪄','✨'],odd:'🍔',oodesc:'Burger',gdesc:'magical things'},
+  {group:['🐶','🐱','🐰','🐻'],odd:'🚂',oodesc:'Train',gdesc:'animals'},
+  {group:['🍎','🍊','🍋','🍇'],odd:'⚽',oodesc:'Ball',gdesc:'fruits'},
+  {group:['⭐','🌙','☀️','⚡'],odd:'🎸',oodesc:'Guitar',gdesc:'sky things'},
+  {group:['🎀','👸','💄','💍'],odd:'🦕',oodesc:'Dinosaur',gdesc:'princess things'},
+  {group:['🚗','🚌','✈️','🚂'],odd:'🌷',oodesc:'Flower',gdesc:'vehicles'},
+];
+function rOddOneOut(el){
+  const s=pick(OOO_SETS);
+  const positions=shuffle([...s.group,s.odd]);
+  el.innerHTML=`<div class="gtitle">🔍 Odd One Out!</div>
+  <div class="mascot-row">${P()}<div class="bubble">One of these does NOT belong! Can you find it? 🔍</div></div>
+  <div class="ooo-grid" style="max-width:min(440px,95%)">
+    ${positions.map(e=>`<div class="ooo-cell" onclick="chkOoo(this,'${e}','${s.odd}')"><span style="font-size:clamp(2.2rem,5vw,3.4rem)">${e}</span></div>`).join('')}
+  </div>
+  <div style="font-family:'Fredoka One',cursive;font-size:clamp(.9rem,2vw,1.1rem);color:var(--textsoft);text-align:center;margin-top:8px">These are all ${s.gdesc} — which one is different?</div>`;
+}
+function chkOoo(el,picked,odd){
+  if(el.classList.contains('choice-correct')||el.classList.contains('choice-wrong'))return;
+  el.classList.add(picked===odd?'choice-correct':'choice-wrong');
+  if(picked===odd){showFB(true,'🔍 You found it! +10 ⭐');addPts(10);setTimeout(()=>startLearn('odd-one-out'),1600);}
+  else showFB(false,'Not that one — look for the different one! 💜');
+}
+
+// ══════════════════════════════════════════
+// 🎵 RHYME
+// ══════════════════════════════════════════
+const RHYMES=[
+  {q:{e:'🐱',w:'cat'},c:[{e:'🎩',w:'hat',r:true},{e:'🌊',w:'sea',r:false},{e:'🐕',w:'dog',r:false},{e:'🌙',w:'moon',r:false}]},
+  {q:{e:'🌙',w:'moon'},c:[{e:'🥄',w:'spoon',r:true},{e:'🌸',w:'flower',r:false},{e:'⭐',w:'star',r:false},{e:'🦆',w:'duck',r:false}]},
+  {q:{e:'🐝',w:'bee'},c:[{e:'🌳',w:'tree',r:true},{e:'🐘',w:'elephant',r:false},{e:'🎸',w:'guitar',r:false},{e:'💎',w:'diamond',r:false}]},
+  {q:{e:'⭐',w:'star'},c:[{e:'🚗',w:'car',r:true},{e:'🌊',w:'ocean',r:false},{e:'🍎',w:'apple',r:false},{e:'🦁',w:'lion',r:false}]},
+  {q:{e:'🎂',w:'cake'},c:[{e:'🐍',w:'snake',r:true},{e:'🐸',w:'frog',r:false},{e:'🌙',w:'moon',r:false},{e:'🌴',w:'palm',r:false}]},
+  {q:{e:'🦆',w:'duck'},c:[{e:'🚛',w:'truck',r:true},{e:'🌺',w:'flower',r:false},{e:'🐠',w:'fish',r:false},{e:'🐄',w:'cow',r:false}]},
+  {q:{e:'🐻',w:'bear'},c:[{e:'💺',w:'chair',r:true},{e:'🐟',w:'fish',r:false},{e:'🍊',w:'orange',r:false},{e:'🌈',w:'rainbow',r:false}]},
+];
+function rRhyme(el){
+  const s=pick(RHYMES);const sh=shuffle(s.c);
+  el.innerHTML=`<div class="gtitle">🎵 Rhyme Time!</div>
+  <div class="mascot-row">${P()}<div class="bubble">What rhymes with <b style="color:var(--purple)">${s.q.w}</b>? Find the matching sound! 🎶</div></div>
+  <div style="text-align:center;margin-bottom:12px"><span class="big-emo">${s.q.e}</span><div style="font-family:'Fredoka One',cursive;font-size:clamp(1.5rem,3.5vw,2.2rem);color:var(--purple)">${s.q.w}</div></div>
+  <div class="two-grid">${sh.map(c=>`<div class="choice-card" onclick="chkRhyme(this,${c.r})"><span class="emo">${c.e}</span><span class="wrd">${c.w}</span></div>`).join('')}</div>`;
+}
+function chkRhyme(el,ok){if(el.classList.contains('choice-correct')||el.classList.contains('choice-wrong'))return;el.classList.add(ok?'choice-correct':'choice-wrong');if(ok){showFB(true,'🎵 They rhyme! +10 ⭐');addPts(10);setTimeout(()=>startLearn('rhyme'),1600);}else showFB(false,'Not quite! Try again! 💜');}
+
+// ══════════════════════════════════════════
+// 🔷 SHAPES
+// ══════════════════════════════════════════
+const SHAPES=[
+  {n:'Circle',   svg:`<circle cx="60" cy="60" r="50" fill="#f9a8d4" stroke="#ec4899" stroke-width="3"/>`,c:['Circle','Square','Triangle','Star']},
+  {n:'Square',   svg:`<rect x="10" y="10" width="100" height="100" rx="3" fill="#c4b5fd" stroke="#8b5cf6" stroke-width="3"/>`,c:['Circle','Square','Triangle','Rectangle']},
+  {n:'Triangle', svg:`<polygon points="60,8 110,112 10,112" fill="#fde68a" stroke="#f59e0b" stroke-width="3"/>`,c:['Diamond','Square','Circle','Triangle']},
+  {n:'Star',     svg:`<polygon points="60,6 74,42 112,42 83,64 93,100 60,78 27,100 37,64 8,42 46,42" fill="#f9a8d4" stroke="#ec4899" stroke-width="2"/>`,c:['Star','Circle','Heart','Diamond']},
+  {n:'Heart',    svg:`<path d="M60 100 C20 70 4 44 20 28 C36 12 60 28 60 28 C60 28 84 12 100 28 C116 44 100 70 60 100Z" fill="#fca5a5" stroke="#ef4444" stroke-width="2"/>`,c:['Circle','Star','Heart','Triangle']},
+  {n:'Diamond',  svg:`<polygon points="60,6 112,60 60,114 8,60" fill="#c4b5fd" stroke="#8b5cf6" stroke-width="2"/>`,c:['Square','Diamond','Rectangle','Star']},
+];
+function rShapes(el){
+  const s=pick(SHAPES);const sh=shuffle(s.c);
+  el.innerHTML=`<div class="gtitle">🔷 What Shape?</div>
+  <div class="shape-display"><svg width="clamp(130px,28vw,180px)" height="clamp(130px,28vw,180px)" viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg" style="width:clamp(130px,28vw,180px);height:auto">${s.svg}</svg></div>
+  <div class="two-grid" style="margin-top:12px">${sh.map(c=>`<div class="choice-card" onclick="chkShape(this,'${c}','${s.n}')"><span class="wrd" style="font-size:clamp(1.2rem,3vw,1.6rem)">${c}</span></div>`).join('')}</div>`;
+}
+function chkShape(el,c,cor){if(el.classList.contains('choice-correct')||el.classList.contains('choice-wrong'))return;el.classList.add(c===cor?'choice-correct':'choice-wrong');if(c===cor){showFB(true,'🔷 That\'s a '+cor+'! +10 ⭐');addPts(10);setTimeout(()=>startLearn('shapes'),1600);}else showFB(false,'Look again! 💜');}
+
+// ══════════════════════════════════════════
+// 🔤 LETTERS
+// ══════════════════════════════════════════
+const LETTERS=[
+  {l:'A',h:'🍎',w:'Apple'},{l:'B',h:'🦋',w:'Butterfly'},{l:'C',h:'🐱',w:'Cat'},
+  {l:'D',h:'🦆',w:'Duck'},{l:'E',h:'🐘',w:'Elephant'},{l:'F',h:'🐟',w:'Fish'},
+  {l:'G',h:'🦒',w:'Giraffe'},{l:'H',h:'🏠',w:'House'},{l:'L',h:'🦁',w:'Lion'},
+  {l:'M',h:'🌙',w:'Moon'},{l:'O',h:'🐙',w:'Octopus'},{l:'P',h:'🐧',w:'Penguin'},
+  {l:'S',h:'⭐',w:'Star'},{l:'T',h:'🐢',w:'Turtle'},{l:'W',h:'🐋',w:'Whale'},
+];
+function rLetters(el){
+  const it=pick(LETTERS);
+  const w=new Set();while(w.size<3){const v=pick(LETTERS).l;if(v!==it.l)w.add(v);}
+  const choices=shuffle([...w,it.l]);
+  el.innerHTML=`<div class="gtitle">🔤 Find the Letter!</div>
+  <div class="mascot-row">${P()}<div class="bubble">${it.h} <b style="color:var(--purple)">${it.w}</b> starts with which letter?</div></div>
+  <div class="big-emo">${it.h}</div>
+  <div style="font-family:'Fredoka One',cursive;font-size:clamp(1.2rem,3vw,1.5rem);color:var(--text2);text-align:center;margin-bottom:10px">${it.w}</div>
+  <div class="letter-choices">${choices.map(c=>`<div class="letter-choice" onclick="chkLetter(this,'${c}','${it.l}')">${c}</div>`).join('')}</div>`;
+}
+function chkLetter(el,c,cor){if(el.classList.contains('choice-correct')||el.classList.contains('choice-wrong'))return;el.classList.add(c===cor?'choice-correct':'choice-wrong');if(c===cor){showFB(true,'🅰️ '+cor+' is right! +10 ⭐');addPts(10);setTimeout(()=>startLearn('letters'),1600);}else showFB(false,'Not that one! 💜');}
+
+// ══════════════════════════════════════════
+// 🐾 ANIMALS
+// ══════════════════════════════════════════
+const ANIMALS=[
+  {e:'🐄',n:'Cow',s:'Mooooo!',c:['Mooooo!','Woof!','Meow!','Oink!']},
+  {e:'🐶',n:'Dog',s:'Woof!',c:['Woof!','Moo!','Baa!','Roar!']},
+  {e:'🐱',n:'Cat',s:'Meow!',c:['Meow!','Oink!','Woof!','Quack!']},
+  {e:'🐷',n:'Pig',s:'Oink!',c:['Oink!','Meow!','Baa!','Moo!']},
+  {e:'🦆',n:'Duck',s:'Quack!',c:['Quack!','Woof!','Neigh!','Oink!']},
+  {e:'🐑',n:'Sheep',s:'Baa!',c:['Baa!','Moo!','Roar!','Quack!']},
+  {e:'🦁',n:'Lion',s:'Roar!',c:['Roar!','Meow!','Oink!','Woof!']},
+  {e:'🐸',n:'Frog',s:'Ribbit!',c:['Ribbit!','Woof!','Oink!','Meow!']},
+];
+function rAnimals(el){
+  const a=pick(ANIMALS);const sh=shuffle(a.c);
+  el.innerHTML=`<div class="gtitle">🐾 What Sound?</div>
+  <div class="mascot-row">${P()}<div class="bubble">What sound does the ${a.n} make? 🐾</div></div>
+  <span class="big-emo">${a.e}</span>
+  <div style="font-family:'Fredoka One',cursive;font-size:clamp(1.2rem,3vw,1.5rem);color:var(--text2);text-align:center;margin:6px 0">${a.n}</div>
+  <div class="two-grid">${sh.map(s=>`<div class="choice-card" onclick="chkAnim(this,'${s}','${a.s}')"><span class="wrd" style="font-size:clamp(1.1rem,2.5vw,1.4rem)">${s}</span></div>`).join('')}</div>`;
+}
+function chkAnim(el,c,cor){if(el.classList.contains('choice-correct')||el.classList.contains('choice-wrong'))return;el.classList.add(c===cor?'choice-correct':'choice-wrong');if(c===cor){showFB(true,'🐾 Right! +10 ⭐');addPts(10);setTimeout(()=>startLearn('animals'),1600);}else showFB(false,'Not quite! 💜');}
+
+// ══════════════════════════════════════════
+// 🔎 FIND THE PRINCESS (Haystack)
+// ══════════════════════════════════════════
+const DISTRACTORS=['🌸','🌺','🌼','🌻','🍀','🦋','🐝','🐞','🌈','⭐','💫','✨','🎀','🎵','🎶','🍭','🍬','🧁','🍰','🍓','🫐','🍑','🌙','☀️','🌟','🦄','🐇','🐿️','🦔','🐠','🐟','🦜','🦩','🦢','🌴','🌿','🍃','🌊','💧','❄️'];
+const FIND_TARGETS=[
+  {e:'👸',name:'Princess'},
+  {e:'👑',name:'Crown'},
+  {e:'🪄',name:'Magic Wand'},
+  {e:'💎',name:'Diamond'},
+  {e:'🏰',name:'Castle'},
+];
+let findActive=false,findFound=0,findGoal=0,findTimer=0,findTimerIv=null,findTargets=[];
+function clearBubTm(){if(bubTimerIv)clearInterval(bubTimerIv);if(findTimerIv)clearInterval(findTimerIv);findActive=false;bubActive=false;}
+
+function rFind(el){
+  clearBubTm();
+  findTargets=shuffle(FIND_TARGETS).slice(0,2);
+  findFound=0; findGoal=findTargets.length*3; findTimer=45; findActive=true;
+  el.innerHTML=`<div class="gtitle">🔎 Find the Hidden Items!</div>
+  <div class="hay-timer" id="hayTimer">⏱ Time: 45s</div>
+  <div class="hay-score" id="hayScore">Found: 0 / ${findGoal}</div>
+  <div style="display:flex;align-items:center;justify-content:center;gap:10px;margin-bottom:8px;flex-wrap:wrap">
+    <span style="font-family:'Fredoka One',cursive;font-size:clamp(.85rem,2vw,1rem);color:var(--text2)">Find these:</span>
+    ${findTargets.map(t=>`<div class="hay-target" id="hay-tgt-${t.e}"><span style="margin-right:4px">${t.e}</span><span style="font-family:'Fredoka One',cursive;font-size:.78rem;color:var(--text2)">${t.name}</span></div>`).join('')}
+  </div>
+  <div class="haystack-canvas" id="hayCanvas"></div>
+  <div class="center mt" id="findResult"></div>`;
+  buildHaystack();
+  findTimerIv=setInterval(()=>{
+    findTimer--;
+    const te=document.getElementById('hayTimer');if(te)te.textContent='⏱ Time: '+findTimer+'s';
+    if(findTimer<=0||!findActive){clearInterval(findTimerIv);endFind();}
+  },1000);
+}
+
+function buildHaystack(){
+  const canvas=document.getElementById('hayCanvas');if(!canvas)return;
+  canvas.innerHTML='';
+  const W=canvas.offsetWidth||400, H=canvas.offsetHeight||300;
+  // place distractors
+  const pool=shuffle(DISTRACTORS).slice(0,38);
+  pool.forEach(e=>{
+    const d=document.createElement('div');d.className='hay-item';
+    d.style.left=Math.random()*85+'%';d.style.top=Math.random()*82+'%';
+    d.style.transform=`rotate(${Math.floor(Math.random()*40)-20}deg) scale(${.7+Math.random()*.6})`;
+    d.style.zIndex=Math.floor(Math.random()*10)+1;
+    d.textContent=e;d.style.pointerEvents='none';
+    canvas.appendChild(d);
+  });
+  // place targets (3 of each)
+  findTargets.forEach(t=>{
+    for(let j=0;j<3;j++){
+      const d=document.createElement('div');d.className='hay-item';
+      d.dataset.target=t.e;
+      d.style.left=Math.random()*82+'%';d.style.top=Math.random()*80+'%';
+      d.style.transform=`rotate(${Math.floor(Math.random()*30)-15}deg) scale(${.9+Math.random()*.5})`;
+      d.style.zIndex=Math.floor(Math.random()*10)+5;
+      d.textContent=t.e;
+      d.onclick=function(){hayTap(this,t.e);};
+      canvas.appendChild(d);
+    }
+  });
+}
+
+function hayTap(el,targetE){
+  if(!findActive||el.dataset.found)return;
+  el.dataset.found='1';el.style.pointerEvents='none';
+  el.style.filter='drop-shadow(0 0 8px gold)';el.style.transform+=' scale(1.4)';
+  // ring
+  const ring=document.createElement('div');ring.className='found-ring';
+  const rect=el.getBoundingClientRect();const canvRect=document.getElementById('hayCanvas').getBoundingClientRect();
+  ring.style.cssText=`width:60px;height:60px;left:${rect.left-canvRect.left+rect.width/2-30}px;top:${rect.top-canvRect.top+rect.height/2-30}px`;
+  document.getElementById('hayCanvas').appendChild(ring);setTimeout(()=>ring.remove(),600);
+  findFound++;
+  document.getElementById('hayScore').textContent='Found: '+findFound+' / '+findGoal;
+  showFB(true,'Found it! +8 ⭐');addPts(8);
+  // check if this target type is all found
+  const allOfType=document.querySelectorAll(`[data-target="${targetE}"]`);
+  const doneOfType=[...allOfType].filter(e=>e.dataset.found);
+  if(doneOfType.length>=allOfType.length){
+    document.getElementById('hay-tgt-'+targetE)&&document.getElementById('hay-tgt-'+targetE).classList.add('done');
+  }
+  if(findFound>=findGoal){findActive=false;clearInterval(findTimerIv);setTimeout(endFind,600);}
+}
+function endFind(){
+  findActive=false;
+  const res=document.getElementById('findResult');
+  if(res){
+    if(findFound>=findGoal){res.innerHTML=`<div style="font-family:'Fredoka One',cursive;font-size:clamp(1.1rem,3vw,1.4rem);color:var(--purple)">🎉 You found them all! Amazing! +20 bonus!</div>`;addPts(20);}
+    else{res.innerHTML=`<div style="font-family:'Fredoka One',cursive;font-size:clamp(1rem,2.5vw,1.2rem);color:var(--text2)">Time's up! You found ${findFound} / ${findGoal}! Great try!</div>`;}
+    res.innerHTML+=`<div class="mt center"><button class="big-btn btn-purple" onclick="startFun('find')">🔄 Play Again!</button></div>`;
+  }
+}
+
+// ══════════════════════════════════════════
+// ❎ TIC TAC TOE
+// ══════════════════════════════════════════
+let tttB=Array(9).fill(null),tttT='X',tttO=false;
+const tttW=[[0,1,2],[3,4,5],[6,7,8],[0,3,6],[1,4,7],[2,5,8],[0,4,8],[2,4,6]];
+function rTTT(el){tttB=Array(9).fill(null);tttT='X';tttO=false;
+  el.innerHTML=`<div class="gtitle">❎ Tic Tac Toe!</div>
+  <div style="display:flex;justify-content:center;gap:22px;margin-bottom:8px;font-family:'Fredoka One',cursive;font-size:clamp(.85rem,2vw,1rem);color:var(--text2)">
+    <span>You = <b style="color:var(--purple)">⭐</b></span><span>Computer = <b style="color:var(--pink)">🌸</b></span>
+  </div>
+  <div class="ttt-status" id="tttSt">Your turn! Tap a square! ⭐</div>
+  <div class="ttt-board" id="tttBd">${Array(9).fill(0).map((_,i)=>`<div class="ttt-cell" id="tc${i}" onclick="tttClick(${i})"></div>`).join('')}</div>
+  <div class="center mt"><button class="big-btn btn-purple" onclick="rTTT(document.getElementById('fgame-content'))">🔄 New Game</button></div>`;
+}
+function tttWin(b){for(const[a,c,d]of tttW)if(b[a]&&b[a]===b[c]&&b[a]===b[d])return{w:b[a],l:[a,c,d]};if(b.every(x=>x))return{w:'draw',l:[]};return null;}
+function tttClick(i){if(tttO||tttB[i]||tttT!=='X')return;tttB[i]='X';document.getElementById('tc'+i).textContent='⭐';document.getElementById('tc'+i).classList.add('xc');const r=tttWin(tttB);if(r){endTTT(r);return;}tttT='O';document.getElementById('tttSt').textContent="Computer's turn... 🌸";setTimeout(aiMove,700);}
+function aiMove(){const em=tttB.map((v,i)=>v?null:i).filter(v=>v!==null);if(!em.length)return;let mv=null;for(const[a,c,d]of tttW){const cs=[a,c,d];if(cs.filter(i=>tttB[i]==='O').length===2&&cs.some(i=>!tttB[i])){mv=cs.find(i=>!tttB[i]);break;}if(!mv&&cs.filter(i=>tttB[i]==='X').length===2&&cs.some(i=>!tttB[i]))mv=cs.find(i=>!tttB[i]);}if(mv===null)mv=!tttB[4]?4:em[Math.floor(Math.random()*em.length)];tttB[mv]='O';document.getElementById('tc'+mv).textContent='🌸';document.getElementById('tc'+mv).classList.add('oc');const r=tttWin(tttB);if(r){endTTT(r);return;}tttT='X';document.getElementById('tttSt').textContent='Your turn! ⭐';}
+function endTTT(r){tttO=true;if(r.w==='X'){r.l.forEach(i=>document.getElementById('tc'+i).classList.add('win'));document.getElementById('tttSt').textContent='🎉 You WIN! +15 ⭐!';addPts(15);showFB(true,'🏆 You won! +15!');}else if(r.w==='O'){document.getElementById('tttSt').textContent='Computer wins! Try again! 💜';showFB(false,'Computer won! 💜 Try again!');}else{document.getElementById('tttSt').textContent="It's a tie! 🤝";showFB(true,'Great tie! +5 ⭐');addPts(5);}}
+
+// ══════════════════════════════════════════
+// 🧠 MEMORY MATCH
+// ══════════════════════════════════════════
+const MEMOJI=['🌸','🐠','⭐','🦋','👸','🐢','🌺','🦀','🐧','🌙','🎀','👑'];
+let mF=[],mM=0,mL=false,mC=[],mTot=0;
+function rMemory(el){mF=[];mM=0;mL=false;
+  const pairs=MEMOJI.slice(0,8);mTot=pairs.length;
+  const cards=shuffle([...pairs,...pairs]);mC=cards.map((e,i)=>({e,id:i,matched:false}));
+  el.innerHTML=`<div class="gtitle">🧠 Memory Match!</div>
+  <div class="mascot-row">${P()}<div class="bubble">Find the matching pairs! Tap 2 cards! 🧠</div></div>
+  <div id="mSt" style="font-family:'Fredoka One',cursive;font-size:clamp(.9rem,2vw,1.05rem);text-align:center;color:var(--text2);margin-bottom:8px">Pairs: 0 / ${mTot}</div>
+  <div class="mem-grid" style="grid-template-columns:repeat(4,1fr)">${cards.map((e,i)=>`<div class="mem-card" id="mc${i}" onclick="flipM(${i})"><div class="mem-back">👸</div><div class="mem-front" id="mf${i}">${e}</div></div>`).join('')}</div>
+  <div class="center mt"><button class="big-btn btn-pink" onclick="rMemory(document.getElementById('fgame-content'))">🔄 New Game</button></div>`;
+}
+function flipM(i){if(mL||mC[i].matched||mF.includes(i))return;document.getElementById('mc'+i).classList.add('flipped');mF.push(i);if(mF.length===2){mL=true;const[a,b]=mF;if(mC[a].e===mC[b].e){mC[a].matched=mC[b].matched=true;document.getElementById('mf'+a).classList.add('mg');document.getElementById('mf'+b).classList.add('mg');document.getElementById('mc'+a).classList.add('matched');document.getElementById('mc'+b).classList.add('matched');mM++;document.getElementById('mSt').textContent='Pairs: '+mM+' / '+mTot;showFB(true,'✨ Match! +8 ⭐');addPts(8);mF=[];mL=false;if(mM===mTot)setTimeout(()=>{showFB(true,'🎉 ALL MATCHED! +20!');addPts(20);},400);}else setTimeout(()=>{document.getElementById('mc'+a).classList.remove('flipped');document.getElementById('mc'+b).classList.remove('flipped');mF=[];mL=false;},900);}}
+
+// ══════════════════════════════════════════
+// 🫧 BUBBLE POP
+// ══════════════════════════════════════════
+const BCOLS=[{bg:'rgba(249,168,212,.75)',bd:'#ec4899'},{bg:'rgba(196,181,253,.75)',bd:'#8b5cf6'},{bg:'rgba(253,230,138,.75)',bd:'#f59e0b'},{bg:'rgba(147,197,253,.75)',bd:'#3b82f6'},{bg:'rgba(110,231,183,.75)',bd:'#10b981'},{bg:'rgba(253,186,116,.75)',bd:'#f97316'}];
+const BEMO=['🌸','⭐','🦋','👸','🌺','💜','🎀','🌟','💎'];
+let bubIv=null,bubTimer=0,bubScore=0,bubTimerIv=null,bubActive=false;
+function rBubbles(el){clearBubTm();bubScore=0;bubTimer=30;bubActive=false;
+  el.innerHTML=`<div class="gtitle">🫧 Pop the Bubbles!</div>
+  <div id="bTimer" style="font-family:'Fredoka One',cursive;font-size:clamp(.9rem,2.2vw,1.1rem);text-align:center;color:var(--text2);margin-bottom:4px">⏱ Time: 30s</div>
+  <div id="bScore" style="font-family:'Fredoka One',cursive;font-size:clamp(1rem,2.5vw,1.2rem);text-align:center;color:var(--gold);margin-bottom:8px">Popped: 0 🫧</div>
+  <div class="bub-area" id="bArea"></div>
+  <div class="center mt"><button class="big-btn btn-pink" id="bBtn" onclick="startBub()">▶️ Let's Go!</button></div>`;
+}
+function startBub(){document.getElementById('bBtn').style.display='none';bubActive=true;spawnBub();spawnBub();spawnBub();bubIv=setInterval(()=>{if(bubActive)spawnBub();},1100);bubTimerIv=setInterval(()=>{bubTimer--;const t=document.getElementById('bTimer');if(t)t.textContent='⏱ Time: '+bubTimer+'s';if(bubTimer<=0){clearBubTm();const ar=document.getElementById('bArea');if(ar)ar.innerHTML=`<div style="display:flex;align-items:center;justify-content:center;height:100%;font-family:'Fredoka One',cursive;font-size:clamp(1rem,2.5vw,1.3rem);color:var(--purple);text-align:center;padding:10px">🎉 Time's up! You popped ${bubScore} bubbles!</div>`;addPts(bubScore*2);showFB(true,'🫧 '+bubScore+' bubbles! +'+bubScore*2+' ⭐');const sb=document.getElementById('bBtn');if(sb){sb.style.display='inline-flex';sb.textContent='🔄 Play Again';}}},1000);}
+function spawnBub(){const ar=document.getElementById('bArea');if(!ar||!bubActive)return;const col=pick(BCOLS);const em=pick(BEMO);const sz=clamp(55,85);const b=document.createElement('div');b.className='bubble-el';const mxX=ar.offsetWidth-sz-8;const mxY=ar.offsetHeight-sz-8;b.style.cssText=`width:${sz}px;height:${sz}px;left:${8+Math.random()*Math.max(mxX,10)}px;top:${8+Math.random()*Math.max(mxY,10)}px;background:${col.bg};border-color:${col.bd};animation-delay:${Math.random()*1.2}s;animation-duration:${1.4+Math.random()}s;font-size:${sz*.45}px`;b.textContent=em;b.onclick=()=>popBub(b);ar.appendChild(b);setTimeout(()=>{if(b.parentNode)b.parentNode.removeChild(b);},4200);}
+function clamp(mn,mx){return mn+Math.floor(Math.random()*(mx-mn));}
+function popBub(b){if(!bubActive||b.classList.contains('popped'))return;b.classList.add('popped');bubScore++;const s=document.getElementById('bScore');if(s)s.textContent='Popped: '+bubScore+' 🫧';setTimeout(()=>{if(b.parentNode)b.parentNode.removeChild(b);},350);}
+
+// ══════════════════════════════════════════
+// INIT
+// ══════════════════════════════════════════
+document.getElementById('mascotLearn').innerHTML=P();
+document.getElementById('mascotFun').innerHTML=P();
+updateBanner();
+</script>
+</body>
+</html>
