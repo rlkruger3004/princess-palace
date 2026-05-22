@@ -13,8 +13,8 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="Princess Palace">
-<link rel="apple-touch-icon" href="icon-192.png">
-<link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
+<link rel="apple-touch-icon" href="/princess-palace/icon-192.png">
+<link rel="icon" type="image/png" sizes="192x192" href="/princess-palace/icon-192.png">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>Princess Learning Palace 👸✨</title>
 <style>
@@ -1604,89 +1604,128 @@ document.getElementById('mascotFun').innerHTML=P();
 updateBanner();
 </script>
 
-<!-- PWA Install Banner -->
-<div id="pwa-banner" style="display:none;position:fixed;bottom:0;left:0;right:0;z-index:9999;
+<!-- PWA: iOS step-by-step modal -->
+<div id="ios-modal" style="display:none;position:fixed;inset:0;z-index:9999;
+  background:rgba(0,0,0,.55);backdrop-filter:blur(4px);
+  align-items:flex-end;justify-content:center;">
+  <div style="background:white;border-radius:28px 28px 0 0;padding:28px 22px 40px;
+    max-width:480px;width:100%;box-shadow:0 -8px 40px rgba(0,0,0,.25);
+    animation:slideUp .35s ease;">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:20px">
+      <div style="font-family:'Fredoka One',cursive;font-size:1.35rem;color:#7c3aed">
+        👸 Install Princess Palace
+      </div>
+      <button onclick="pwaDismiss()" style="background:#f1f5f9;border:none;border-radius:50%;
+        width:34px;height:34px;font-size:1.1rem;cursor:pointer;touch-action:manipulation">✕</button>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:16px">
+      <div style="display:flex;align-items:center;gap:14px;background:#faf5ff;
+        border:2px solid #e9d5ff;border-radius:16px;padding:14px 16px">
+        <div style="background:#7c3aed;color:white;font-family:'Fredoka One',cursive;
+          font-size:1.1rem;border-radius:50%;width:36px;height:36px;min-width:36px;display:flex;
+          align-items:center;justify-content:center">1</div>
+        <div>
+          <div style="font-family:'Fredoka One',cursive;font-size:1rem;color:#3b0764">Tap the Share button</div>
+          <div style="font-size:.85rem;color:#6b21a8;margin-top:2px">The <b>⬜↑</b> icon at the bottom of your Safari screen</div>
+        </div>
+      </div>
+      <div style="display:flex;align-items:center;gap:14px;background:#fdf2f8;
+        border:2px solid #fbcfe8;border-radius:16px;padding:14px 16px">
+        <div style="background:#ec4899;color:white;font-family:'Fredoka One',cursive;
+          font-size:1.1rem;border-radius:50%;width:36px;height:36px;min-width:36px;display:flex;
+          align-items:center;justify-content:center">2</div>
+        <div>
+          <div style="font-family:'Fredoka One',cursive;font-size:1rem;color:#3b0764">Scroll down in the menu</div>
+          <div style="font-size:.85rem;color:#be185d;margin-top:2px">Find and tap <b>"Add to Home Screen"</b> 📲</div>
+        </div>
+      </div>
+      <div style="display:flex;align-items:center;gap:14px;background:#fff7ed;
+        border:2px solid #fed7aa;border-radius:16px;padding:14px 16px">
+        <div style="background:#f59e0b;color:white;font-family:'Fredoka One',cursive;
+          font-size:1.1rem;border-radius:50%;width:36px;height:36px;min-width:36px;display:flex;
+          align-items:center;justify-content:center">3</div>
+        <div>
+          <div style="font-family:'Fredoka One',cursive;font-size:1rem;color:#3b0764">Tap "Add" in the top-right corner</div>
+          <div style="font-size:.85rem;color:#d97706;margin-top:2px">Done! A 👸 icon appears on your home screen</div>
+        </div>
+      </div>
+    </div>
+    <div style="margin-top:18px;background:#eff6ff;border-radius:12px;padding:10px 14px;
+      font-size:.82rem;color:#1d4ed8;text-align:center">
+      💡 Open it once on WiFi first — then it works on a plane with no internet!
+    </div>
+  </div>
+</div>
+
+<!-- PWA strip banner -->
+<div id="pwa-banner" style="display:none;position:fixed;bottom:0;left:0;right:0;z-index:9998;
   background:linear-gradient(135deg,#7c3aed,#db2777);color:white;
-  padding:14px 18px;box-shadow:0 -4px 20px rgba(124,58,237,.4);">
-  <div style="display:flex;align-items:center;justify-content:space-between;gap:12px;max-width:600px;margin:0 auto;flex-wrap:wrap">
+  padding:12px 18px;box-shadow:0 -4px 20px rgba(124,58,237,.4);">
+  <div style="display:flex;align-items:center;justify-content:space-between;gap:10px;max-width:600px;margin:0 auto">
     <div style="display:flex;align-items:center;gap:10px">
-      <span style="font-size:1.8rem">👸</span>
+      <span style="font-size:1.5rem">👸</span>
       <div>
-        <div style="font-family:'Fredoka One',cursive;font-size:1rem;line-height:1.2">Install Princess Palace!</div>
-        <div id="pwa-hint" style="font-size:.8rem;opacity:.9;margin-top:2px">Play offline, even on a plane! ✈️</div>
+        <div style="font-family:'Fredoka One',cursive;font-size:.95rem">Install for offline play!</div>
+        <div style="font-size:.75rem;opacity:.85">Works on a plane ✈️ — no WiFi needed</div>
       </div>
     </div>
     <div style="display:flex;gap:8px;flex-shrink:0">
       <button onclick="pwaInstall()" style="font-family:'Fredoka One',cursive;background:white;
-        color:#7c3aed;border:none;padding:8px 20px;border-radius:50px;cursor:pointer;
-        font-size:.95rem;box-shadow:0 2px 8px rgba(0,0,0,.2);touch-action:manipulation">
-        Add to Home ✨
+        color:#7c3aed;border:none;padding:8px 16px;border-radius:50px;cursor:pointer;
+        font-size:.9rem;touch-action:manipulation;box-shadow:0 2px 8px rgba(0,0,0,.2)">
+        How to Install
       </button>
-      <button onclick="pwaDismiss()" style="background:rgba(255,255,255,.2);border:2px solid 
-        rgba(255,255,255,.4);color:white;padding:8px 12px;border-radius:50px;cursor:pointer;
-        font-size:.9rem;touch-action:manipulation">✕</button>
+      <button onclick="pwaDismiss()" style="background:rgba(255,255,255,.2);border:2px solid
+        rgba(255,255,255,.4);color:white;padding:8px 10px;border-radius:50px;cursor:pointer;
+        font-size:.85rem;touch-action:manipulation">✕</button>
     </div>
   </div>
 </div>
 
 <script>
-// ── Service Worker ──
 if ('serviceWorker' in navigator) {
   window.addEventListener('load', () => {
-    navigator.serviceWorker.register('sw.js').catch(() => {});
+    navigator.serviceWorker.register('/princess-palace/sw.js', {scope: '/princess-palace/'}).catch(() => {});
   });
 }
 
-// ── Install logic ──
 let _pwaPrompt = null;
-
 window.addEventListener('beforeinstallprompt', e => {
-  e.preventDefault();
-  _pwaPrompt = e;
-  setTimeout(showPWABanner, 3500);
+  e.preventDefault(); _pwaPrompt = e;
+  setTimeout(() => {
+    if (!sessionStorage.getItem('pwaDismissed'))
+      document.getElementById('pwa-banner').style.display = 'block';
+  }, 3500);
 });
-
 window.addEventListener('appinstalled', () => {
   document.getElementById('pwa-banner').style.display = 'none';
+  document.getElementById('ios-modal').style.display = 'none';
 });
-
-function showPWABanner() {
-  const banner = document.getElementById('pwa-banner');
-  if (!banner || sessionStorage.getItem('pwaDismissed')) return;
-  banner.style.display = 'block';
-}
-
+window.addEventListener('load', () => {
+  const isIOS = /iphone|ipad|ipod/i.test(navigator.userAgent.toLowerCase());
+  const standalone = window.matchMedia('(display-mode: standalone)').matches || navigator.standalone === true;
+  if (isIOS && !standalone && !sessionStorage.getItem('pwaDismissed')) {
+    setTimeout(() => { document.getElementById('pwa-banner').style.display = 'block'; }, 5000);
+  }
+});
 function pwaInstall() {
   if (_pwaPrompt) {
     _pwaPrompt.prompt();
     _pwaPrompt.userChoice.then(() => { _pwaPrompt = null; });
     document.getElementById('pwa-banner').style.display = 'none';
   } else {
-    // iOS instructions
-    const isIOS = /iphone|ipad|ipod/i.test(navigator.userAgent.toLowerCase());
-    if (isIOS) {
-      document.getElementById('pwa-hint').textContent =
-        '👇 Tap Share ↑ then "Add to Home Screen"';
-    } else {
-      document.getElementById('pwa-hint').textContent =
-        'Open in Chrome and tap the menu → "Add to Home Screen"';
-    }
+    document.getElementById('pwa-banner').style.display = 'none';
+    document.getElementById('ios-modal').style.display = 'flex';
   }
 }
-
 function pwaDismiss() {
   document.getElementById('pwa-banner').style.display = 'none';
+  document.getElementById('ios-modal').style.display = 'none';
   sessionStorage.setItem('pwaDismissed', '1');
 }
-
-// iOS: show banner after 5s if opened in Safari and not already installed
-window.addEventListener('load', () => {
-  const isIOS = /iphone|ipad|ipod/i.test(navigator.userAgent.toLowerCase());
-  const isStandalone = window.matchMedia('(display-mode: standalone)').matches
-    || window.navigator.standalone === true;
-  if (isIOS && !isStandalone && !sessionStorage.getItem('pwaDismissed')) {
-    setTimeout(showPWABanner, 5000);
-  }
+document.addEventListener('DOMContentLoaded', () => {
+  const modal = document.getElementById('ios-modal');
+  if (modal) modal.addEventListener('click', e => { if (e.target === modal) pwaDismiss(); });
 });
 </script>
 
